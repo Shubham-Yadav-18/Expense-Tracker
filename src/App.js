@@ -1,34 +1,43 @@
 // import ExpenseItem from "./components/ExpenseItem";
-import React ,{useState}from "react";
-import Expenses from "./components/Expenses/Expenses";
-import NewExpense from "./components/NewExpense/NewExpense";
-const DUMMY_EXPENSE = [
-  
-];
-const App=()=> {
-  const [expenses,setExpenses]=useState(DUMMY_EXPENSE);
-  // fetch('http://localhost/sample-api/api/read.php').then(
-  //   response =>{
-  //     return response.json();
-  //   }
-  // ).then(
-  //   data =>{
-  //     console.log(data);
-  //     setExpenses(data);
-  //   }
-  // );
+import React from "react";
+import Home from "./pages/Home";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "./firebase/AuthContext";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+// import './Style.scss';
 
-  const addExpensehandler=(expense)=>{
-    const updatedExpense=[expense,...expenses];
-        setExpenses(updatedExpense);
-  }
+
+const App = () => {
+
+  const { currentUser } = useContext(AuthContext);
+
+  const ProtectedRoute = ({ children }) => {
+    if (!currentUser) {
+      return <Navigate to="/login" />;
+    }
+    return children;
+  };
 
   return (
-    <div>
-      <NewExpense onAddExpense={addExpensehandler}/>
-      <Expenses item={expenses}></Expenses>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
