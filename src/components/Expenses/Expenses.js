@@ -33,7 +33,7 @@ const Expenses = (props) => {
   }, [currentUser]);
 
   return (
-    <Card className="expenses">
+    <div className="expenses">
         {expenses.map((expense, index) => (
           <ExpenseItem 
           title={expense.Title}
@@ -42,7 +42,7 @@ const Expenses = (props) => {
           key={index}
           />
         ))}
-      </Card>
+      </div>
   );
 };
 
