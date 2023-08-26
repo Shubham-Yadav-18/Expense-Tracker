@@ -2,8 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from '../../firebase/AuthContext';
 import { collection, query, orderBy, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/Firebase";
-import Card from "../UI/Card";
 import ExpenseItem from "./ExpenseItem";
+import './Expenses.css'
 
 
 const Expenses = (props) => {
