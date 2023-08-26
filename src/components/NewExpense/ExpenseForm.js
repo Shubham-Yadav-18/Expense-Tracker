@@ -1,26 +1,47 @@
 import React, { useContext, useState } from "react";
 
 import "./ExpenseForm.css";
-import { addDoc, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Firebase";
-import { AuthContext } from "../../firebase/AuthContext";
+import { AuthContext } from '../../firebase/AuthContext'
 
 const ExpenseForm = (props) => {
-  const { curentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
+  // console.log("Hhdsofk",currentUser.displayName );
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredDate, setEnteredDate] = useState("");
 
   const titleChangeHandler = (event) => {
     setEnteredTitle(event.target.value);
+    // console.log(curentUser.uid);
   };
   const amountChangeHandler = (event) => {
     setEnteredAmount(event.target.value);
+    
   };
   const dateChangeHandler = (event) => {
     setEnteredDate(event.target.value);
+   
   };
-  const submitHandler = (event) => {
+  const addExpenseToFirestore = async (title, amount, date) => {
+    try {
+      const expenseData = {
+        Title: title,
+        Amount: amount,
+        ExpenseDate: date,
+        CreatedAt:new Date(),
+      };
+
+      const userExpenseCollectionRef = collection(db, "UserExpense", currentUser.uid,"expenses");
+      await addDoc(userExpenseCollectionRef, expenseData);
+
+      console.log("Expense added to Firestore:", expenseData);
+    } catch (error) {
+      console.error("Error adding expense:", error);
+    }
+  };
+  const submitHandler = async(event) => {
     event.preventDefault();
     const expenseData = {
       title: enteredTitle,
@@ -28,7 +49,8 @@ const ExpenseForm = (props) => {
       date: new Date(enteredDate),
     };
     props.onSaveExpenseData(expenseData);
-//    console.log(curentUser.uid)
+  
+    addExpenseToFirestore(enteredTitle,enteredAmount,enteredDate);
     setEnteredTitle("");
     setEnteredAmount("");
     setEnteredDate("");
@@ -61,7 +83,9 @@ const ExpenseForm = (props) => {
       </div>
       <div className="new-expense__actions">
         <button type="submit">Add Expense</button>
+       
       </div>
+    
     </form>
   );
 };

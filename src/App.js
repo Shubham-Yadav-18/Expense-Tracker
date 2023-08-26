@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { AuthContext } from "./firebase/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Test from "./components/NewExpense/Test";
 // import './Style.scss';
 
 
@@ -29,6 +30,7 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Home />
+                
               </ProtectedRoute>
             }
           />
